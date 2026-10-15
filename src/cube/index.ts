@@ -1,3 +1,5 @@
 export * from './state'
 export * from './notation'
 export * from './validate'
+export * from './solver'
+export * from './shuffle'

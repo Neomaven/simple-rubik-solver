@@ -7,6 +7,7 @@ declare module 'cubejs' {
     clone(): Cube
     asString(): string
     static initSolver(): void
+    static fromString(facelets: string): Cube
     static random(): Cube
     static scramble(): string
   }
