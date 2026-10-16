@@ -1,14 +1,16 @@
 import { formatMove } from './cube'
 import { useCubeStore } from './cube/store'
+import CubeEditor from './editor/CubeEditor'
 import CubeView from './view/CubeView'
 
 export default function App() {
-  const { cube, error, solution, queue, solve, shuffle, reset, play, advance } = useCubeStore()
+  const { cube, error, solution, queue, editSticker, solve, shuffle, reset, play, advance } = useCubeStore()
 
   return (
     <main className="min-h-screen bg-slate-900 text-white flex flex-col items-center justify-center gap-4">
       <h1 className="text-3xl font-bold">Simple Rubik Solver</h1>
       <CubeView cube={cube} queue={queue} onMoveDone={advance} />
+      <CubeEditor cube={cube} onSetSticker={editSticker} />
       <div className="flex gap-2">
         <button className="rounded bg-blue-600 px-4 py-2" onClick={solve}>
           Solve

@@ -3,7 +3,8 @@
 import { useCallback, useState } from 'react'
 import { shuffleCube } from './shuffle'
 import { solveCube } from './solver'
-import { applyMove, solvedState, type CubeState, type Move } from './state'
+import { setSticker } from './edit'
+import { applyMove, solvedState, type CubeState, type Face, type Move } from './state'
 import type { ValidationError } from './validate'
 
 export interface CubeStore {
@@ -13,6 +14,8 @@ export interface CubeStore {
   /** Moves still to be animated; the head is the one currently turning. */
   queue: Move[]
   setCube: (state: CubeState) => void
+  /** Recolor one sticker; centers are ignored. */
+  editSticker: (index: number, color: Face) => void
   solve: () => void
   shuffle: () => void
   /** Stop any animation and go back to the solved cube. */
@@ -36,6 +39,11 @@ export function useCubeStore(initial: CubeState = solvedState()): CubeStore {
     setError(null)
     setSolution(null)
   }, [])
+
+  const editSticker = useCallback(
+    (index: number, color: Face) => setCube(setSticker(cube, index, color)),
+    [cube, setCube],
+  )
 
   const reset = useCallback(() => setCube(solvedState()), [setCube])
 
@@ -62,5 +70,5 @@ export function useCubeStore(initial: CubeState = solvedState()): CubeStore {
 
   const shuffle = useCallback(() => setCube(shuffleCube(cube)), [cube, setCube])
 
-  return { cube, error, solution, queue, setCube, solve, shuffle, reset, play, advance }
+  return { cube, error, solution, queue, setCube, editSticker, solve, shuffle, reset, play, advance }
 }
