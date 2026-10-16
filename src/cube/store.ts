@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from 'react'
 import { shuffleCube } from './shuffle'
-import { solveCube } from './solver'
+import { solveCube, type SolveResult } from './solver'
 import { setSticker } from './edit'
 import { invertMove } from './notation'
 import { applyMove, solvedState, type CubeState, type Face, type Move } from './state'
@@ -98,7 +98,12 @@ export function useCubeStore(initial: CubeState = solvedState()): CubeStore {
   }, [cube, queue, direction, step])
 
   const solve = useCallback(() => {
-    const result = solveCube(cube)
+    let result: SolveResult
+    try {
+      result = solveCube(cube)
+    } catch {
+      result = { ok: false, error: { code: 'SOLVER', message: 'The solver failed' } }
+    }
     if (result.ok) {
       setError(null)
       setSolution(result.moves)

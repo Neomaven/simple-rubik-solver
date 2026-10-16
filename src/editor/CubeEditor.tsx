@@ -35,7 +35,7 @@ export default function CubeEditor({ cube, onSetSticker }: Props) {
 
   return (
     <section aria-label="Cube editor" className="flex flex-col items-center gap-3">
-      <div role="radiogroup" aria-label="Palette" className="flex gap-2">
+      <div role="radiogroup" aria-label="Palette" className="flex flex-wrap justify-center gap-2">
         {FACES.map((face) => (
           <button
             key={face}

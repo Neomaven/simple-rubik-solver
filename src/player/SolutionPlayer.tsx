@@ -54,7 +54,7 @@ export default function SolutionPlayer({ moves, step, busy, onNext, onPrevious, 
           </ol>
           <p data-testid="step-status">Step {Math.min(step + 1, total)} of {total}</p>
           <p data-testid="instruction">{atEnd ? 'Done — the cube is solved.' : describeMove(moves[step])}</p>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <button
               className={button}
               disabled={busy || step === 0}
