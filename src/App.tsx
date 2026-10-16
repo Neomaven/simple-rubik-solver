@@ -1,10 +1,11 @@
-import { formatMove } from './cube'
 import { useCubeStore } from './cube/store'
 import CubeEditor from './editor/CubeEditor'
+import SolutionPlayer from './player/SolutionPlayer'
 import CubeView from './view/CubeView'
 
 export default function App() {
-  const { cube, error, solution, queue, editSticker, solve, shuffle, reset, play, advance } = useCubeStore()
+  const { cube, error, solution, queue, step, editSticker, solve, shuffle, reset, advance, stepForward, stepBack, restart } =
+    useCubeStore()
 
   return (
     <main className="min-h-screen bg-slate-900 text-white flex flex-col items-center justify-center gap-4">
@@ -21,15 +22,6 @@ export default function App() {
         <button className="rounded bg-slate-600 px-4 py-2" onClick={reset}>
           Reset
         </button>
-        {solution && solution.length > 0 && (
-          <button
-            className="rounded bg-green-600 px-4 py-2 disabled:opacity-50"
-            disabled={queue.length > 0}
-            onClick={() => play(solution)}
-          >
-            Play
-          </button>
-        )}
       </div>
       {error && (
         <p role="alert" className="text-red-400">
@@ -37,14 +29,14 @@ export default function App() {
         </p>
       )}
       {solution && (
-        <section aria-label="Solution">
-          <p>{solution.length === 0 ? 'Already solved (0 moves)' : `${solution.length} moves`}</p>
-          <ol className="flex flex-wrap gap-2" data-testid="move-list">
-            {solution.map((move, i) => (
-              <li key={i}>{formatMove(move)}</li>
-            ))}
-          </ol>
-        </section>
+        <SolutionPlayer
+          moves={solution}
+          step={step}
+          busy={queue.length > 0}
+          onNext={stepForward}
+          onPrevious={stepBack}
+          onRestart={restart}
+        />
       )}
     </main>
   )
