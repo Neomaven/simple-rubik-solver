@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import App from './App'
 
 describe('App', () => {
@@ -16,5 +16,18 @@ describe('App', () => {
     expect(await screen.findByText(/\d+ moves/)).toBeInTheDocument()
     expect(screen.getByTestId('move-list')).toBeInTheDocument()
     expect(screen.queryByRole('alert')).toBeNull()
+  }, 60000)
+
+  it('plays the solution move by move and ends solved; Reset interrupts', async () => {
+    render(<App />)
+    fireEvent.click(screen.getByRole('button', { name: /shuffle/i }))
+    fireEvent.click(screen.getByRole('button', { name: /solve/i }))
+    await screen.findByText(/\d+ moves/)
+    fireEvent.click(screen.getByRole('button', { name: /play/i }))
+    // Without WebGL (jsdom) each move commits immediately, so the queue drains and the list goes away.
+    await waitFor(() => expect(screen.queryByTestId('move-list')).toBeNull())
+    expect(screen.queryByRole('alert')).toBeNull()
+    fireEvent.click(screen.getByRole('button', { name: /reset/i }))
+    expect(screen.queryByTestId('move-list')).toBeNull()
   }, 60000)
 })
