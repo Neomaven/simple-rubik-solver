@@ -14,6 +14,7 @@ export type ValidationCode =
   | 'EDGE_FLIP'
   | 'CORNER_TWIST'
   | 'PARITY'
+  | 'SOLVER'
 
 export interface ValidationError {
   code: ValidationCode

@@ -9,6 +9,28 @@ describe('App', () => {
     ).toBeInTheDocument()
   })
 
+  it('lays out three panels: stacked by default, side by side from lg', () => {
+    render(<App />)
+    const layout = screen.getByTestId('layout')
+    expect(layout).toHaveClass('grid-cols-1', 'lg:grid-cols-3')
+    for (const id of ['panel-left', 'panel-center', 'panel-right']) {
+      expect(layout).toContainElement(screen.getByTestId(id))
+    }
+    expect(screen.getByTestId('panel-left')).toContainElement(screen.getByRole('radiogroup', { name: /palette/i }))
+    expect(screen.getByTestId('panel-center')).toContainElement(screen.getByRole('button', { name: /solve/i }))
+  })
+
+  it('shows a friendly message for an invalid cube', () => {
+    render(<App />)
+    // Recolour one non-centre sticker: colour counts become invalid.
+    fireEvent.click(screen.getByRole('radio', { name: /red/i }))
+    fireEvent.click(screen.getByLabelText('U sticker 0'))
+    fireEvent.click(screen.getByRole('button', { name: /solve/i }))
+    const alert = screen.getByRole('alert')
+    expect(alert).toHaveTextContent(/exactly 9 times/i)
+    expect(alert).not.toHaveTextContent(/appears \d+ times, expected/)
+  })
+
   it('shows the move list and count after shuffle then solve', async () => {
     render(<App />)
     fireEvent.click(screen.getByRole('button', { name: /shuffle/i }))
