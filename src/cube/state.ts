@@ -46,7 +46,8 @@ function faceletGeometry(face: Face, row: number, col: number): { pos: Vec; norm
 
 const key = (pos: Vec, normal: Vec) => `${pos.join(',')}|${normal.join(',')}`
 
-const GEOMETRY = FACES.flatMap((face) =>
+/** Cubie position and outward normal of every facelet, indexed like a CubeState. */
+export const GEOMETRY = FACES.flatMap((face) =>
   Array.from({ length: 9 }, (_, i) => faceletGeometry(face, Math.floor(i / 3), i % 3)),
 )
 const INDEX_BY_KEY = new Map(GEOMETRY.map((g, i) => [key(g.pos, g.normal), i]))
